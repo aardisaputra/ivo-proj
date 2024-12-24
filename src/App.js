@@ -1,5 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
+import xolor from "xolor";
 import data from "./input.json";
 import React, { useState } from "react";
 
@@ -54,6 +55,7 @@ function App() {
       return (
         <div className="text-left" title={dataObj.title}>
           {dataObj.children.map((child) => helper(child))}
+          <br />
         </div>
       );
     } else if (dataObj.type === "h1") {
@@ -66,6 +68,7 @@ function App() {
       return (
         <div title={dataObj.title}>
           {dataObj.children.map((child) => clauseHelper(child))}
+          <br />
         </div>
       );
     } else if (dataObj.type === "ul") {
@@ -91,24 +94,34 @@ function App() {
 
   function mentionHelper(color, title, id, value) {
     function rgbToHex(rgb) {
+      // Match the RGB value using a regular expression
       const result = rgb.match(/^rgb\((\d+), (\d+), (\d+)\)$/);
 
-      const r = parseInt(result[1], 10);
-      const g = parseInt(result[2], 10);
-      const b = parseInt(result[3], 10);
+      if (!result) {
+        throw new Error("Invalid RGB format");
+      }
 
-      const clamp = (x) => Math.max(0, Math.min(255, x));
-      const toHex = (x) => x.toString(16).padStart(2, "0");
-      return `#${toHex(clamp(r))}${toHex(clamp(g))}${toHex(clamp(b))}`;
+      console.log(result);
+
+      // Extract the RGB values and convert each to a 2-digit hexadecimal string
+      const r = parseInt(result[1]);
+      const g = parseInt(result[2]);
+      const b = parseInt(result[3]);
+
+      function c(v) {
+        var hex = v.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      }
+      console.log("#" + c(r) + c(g) + c(b));
+      return "#" + c(r) + c(g) + c(b);
     }
 
+    const hex = rgbToHex(color).toUpperCase();
+
     const mention = (
-      <span
-        title={title}
-        className={`text-black inline-block bg-[` + rgbToHex(color) + `]`}
-      >
+      <div title={title} className={`text-black inline-block bg-[` + hex + "]"}>
         {value}
-      </span>
+      </div>
     );
 
     setMentionState((prevState) => ({
@@ -126,12 +139,16 @@ function App() {
           {clauseCount + 1}. {textHelper(child.children)}
         </h4>
       );
+    } else if (child.type === "p") {
+      return <p title={child.title}>• {textHelper(child.children)}</p>;
     } else {
-      return helper(child);
+      return <span>{helper(child)}</span>;
     }
   }
 
-  return <div className="App">{data.map((dataObj) => helper(dataObj))}</div>;
+  return (
+    <div className="App m-6">{data.map((dataObj) => helper(dataObj))}</div>
+  );
 }
 
 export default App;
