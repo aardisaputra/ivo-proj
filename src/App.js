@@ -6,7 +6,7 @@ import React, { useState } from "react";
 
 function App() {
   const [mentionState, setMentionState] = useState({});
-  const [clauseCount, setClauseCount] = useState(0);
+  var clauseCount = 0;
 
   function textHelper(textChildren) {
     return textChildren.map((child) => {
@@ -134,13 +134,14 @@ function App() {
 
   function clauseHelper(child) {
     if (child.type === "h4") {
+      clauseCount += 1;
       return (
         <h4 title={child.title}>
-          {clauseCount + 1}. {textHelper(child.children)}
+          {clauseCount}. {textHelper(child.children)}
         </h4>
       );
     } else if (child.type === "p") {
-      return <p title={child.title}>• {textHelper(child.children)}</p>;
+      return <p title={child.title}>(a) {textHelper(child.children)}</p>;
     } else {
       return <span>{helper(child)}</span>;
     }
