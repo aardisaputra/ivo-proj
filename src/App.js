@@ -122,8 +122,8 @@ function App() {
   function clauseHelper(child) {
     if (child.type === "h4") {
       return (
-        <h4>
-          {clauseCount + 1}. {child.title}
+        <h4 title={child.title}>
+          {clauseCount + 1}. {textHelper(child.children)}
         </h4>
       );
     } else {
