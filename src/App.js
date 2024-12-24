@@ -67,7 +67,10 @@ function App() {
     } else if (dataObj.type === "clause") {
       return (
         <div title={dataObj.title}>
-          {dataObj.children.map((child) => clauseHelper(child))}
+          {dataObj.children.map((child, index) => {
+            var itemNo = String.fromCharCode(97 + index - 1);
+            return clauseHelper(child, itemNo);
+          })}
           <br />
         </div>
       );
@@ -93,33 +96,12 @@ function App() {
   }
 
   function mentionHelper(color, title, id, value) {
-    function rgbToHex(rgb) {
-      // Match the RGB value using a regular expression
-      const result = rgb.match(/^rgb\((\d+), (\d+), (\d+)\)$/);
-
-      if (!result) {
-        throw new Error("Invalid RGB format");
-      }
-
-      console.log(result);
-
-      // Extract the RGB values and convert each to a 2-digit hexadecimal string
-      const r = parseInt(result[1]);
-      const g = parseInt(result[2]);
-      const b = parseInt(result[3]);
-
-      function c(v) {
-        var hex = v.toString(16);
-        return hex.length === 1 ? "0" + hex : hex;
-      }
-      console.log("#" + c(r) + c(g) + c(b));
-      return "#" + c(r) + c(g) + c(b);
-    }
-
-    const hex = rgbToHex(color).toUpperCase();
-
     const mention = (
-      <div title={title} className={`text-black inline-block bg-[` + hex + "]"}>
+      <div
+        title={title}
+        style={{ background: `${color}` }}
+        className={"text-white inline-block"}
+      >
         {value}
       </div>
     );
@@ -132,7 +114,7 @@ function App() {
     return mention;
   }
 
-  function clauseHelper(child) {
+  function clauseHelper(child, itemNo) {
     if (child.type === "h4") {
       clauseCount += 1;
       return (
@@ -141,7 +123,20 @@ function App() {
         </h4>
       );
     } else if (child.type === "p") {
-      return <p title={child.title}>(a) {textHelper(child.children)}</p>;
+      return (
+        <p title={child.title}>
+          ({itemNo}) {textHelper(child.children)}
+        </p>
+      );
+    } else if (child.type === "clause") {
+      return (
+        <div title={child.title}>
+          {child.children.map((child, index) => {
+            return clauseHelper(child, itemNo);
+          })}
+          <br />
+        </div>
+      );
     } else {
       return <span>{helper(child)}</span>;
     }
