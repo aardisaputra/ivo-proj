@@ -65,7 +65,7 @@ function App() {
     } else if (dataObj.type === "clause") {
       return (
         <div title={dataObj.title}>
-          {dataObj.children.map((child) => helper(child))}
+          {dataObj.children.map((child) => clauseHelper(child))}
         </div>
       );
     } else if (dataObj.type === "ul") {
@@ -117,23 +117,17 @@ function App() {
     return mention;
   }
 
-  // function clauseHelper(children) {
-  //   return {
-  //     children.map((child) => {
-
-  //     })
-
-  //   if (child.type === "h4") {
-  //     console.log("TEST");
-  //     return (
-  //       <span className={child.bold ? "font-bold" : ""}>
-  //         <span className={child.underline ? "underline" : ""}>
-  //           {child.text}
-  //         </span>
-  //       </span>
-  //     );
-  //   }
-  // }
+  function clauseHelper(child) {
+    if (child.type === "h4") {
+      return (
+        <h4>
+          {clauseCount + 1}. {child.title}
+        </h4>
+      );
+    } else {
+      return helper(child);
+    }
+  }
 
   return <div className="App">{data.map((dataObj) => helper(dataObj))}</div>;
 }
