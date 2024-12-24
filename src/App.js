@@ -81,7 +81,9 @@ function App() {
         </li>
       );
     } else if (dataObj.type === "lic") {
-      return <span title={dataObj.title}>{textHelper(dataObj.children)}</span>;
+      return (
+        <span title={dataObj.title}>• {textHelper(dataObj.children)}</span>
+      );
     } else {
       return "ERROR: UNIMPLEMENTED TYPE";
     }
